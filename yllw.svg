@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-labelledby="title description">
+  <title id="title">YLLW</title>
+  <desc id="description">Educational learning platform for students.</desc>
+
+
+
+  <foreignObject x="0" y="0" width="1440" height="900">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <style>
+          * { box-sizing: border-box; }
+          html, body { width: 1440px; height: 900px; margin: 0; overflow: hidden; }
+          body {
+            position: relative;
+            overflow: hidden;
+            background:
+              radial-gradient(circle at 92% 10%, rgba(255, 91, 22, 0.06), transparent 13%),
+              radial-gradient(circle at 19% 90%, rgba(255, 106, 22, 0.07), transparent 15%),
+              linear-gradient(135deg, #050505 0%, #11131a 48%, #020202 100%);
+            color: #f4f1db;
+            font-family: "Courier New", Courier, monospace;
+          }
+          body:before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.015) 32%, transparent 62%);
+            pointer-events: none;
+          }
+          .shell { position: relative; min-height: 900px; padding: 0 68px; }
+          .topbar {
+            height: 126px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 229, 28, 0.24);
+          }
+          .brand {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            color: #ffe51c;
+            letter-spacing: 0;
+            text-decoration: none;
+            text-shadow: 0 0 18px rgba(255, 229, 28, 0.55);
+          }
+          .brand strong { font-size: 46px; line-height: 1; }
+          .brand span {
+            color: #ff7a16;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+          }
+          .main {
+            display: grid;
+            grid-template-columns: 286px minmax(0, 1fr);
+            gap: 48px;
+            height: 774px;
+            padding-top: 62px;
+          }
+          .search-title {
+            width: 100%;
+            margin: 12px 0 24px;
+            color: #ffe51c;
+            font-size: 96px;
+            line-height: 0.9;
+            text-align: center;
+            letter-spacing: 0;
+            text-shadow: 0 0 28px rgba(255, 229, 28, 0.58), 8px 8px 0 rgba(255, 106, 22, 0.16);
+          }
+          .search {
+            display: grid;
+            grid-template-columns: 1fr 70px;
+            height: 70px;
+            border: 1px solid rgba(255, 229, 28, 0.55);
+            background: rgba(5, 5, 6, 0.84);
+            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45), inset 0 0 24px rgba(255, 229, 28, 0.025);
+          }
+          .search-field {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-width: 0;
+            padding: 0 24px;
+          }
+          .prompt { flex: none; color: #ff6a16; font-size: 15px; font-weight: 700; }
+          .search-field input {
+            width: 100%;
+            min-width: 0;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: #f4f1db;
+            font: 15px "Courier New", Courier, monospace;
+          }
+          .search-field input::placeholder { color: #697785; opacity: 1; }
+          .go {
+            display: grid;
+            place-items: center;
+            border: 0;
+            border-left: 1px solid rgba(255, 229, 28, 0.55);
+            border-radius: 0;
+            background: #ffe51c;
+            color: #090909;
+            font: 700 26px "Courier New", Courier, monospace;
+            cursor: pointer;
+          }
+          .go:hover, .go:focus-visible { background: #fff36a; outline: 3px solid #168cff; outline-offset: -3px; }
+          .search:focus-within { border-color: #ffe51c; box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45), 0 0 24px rgba(255, 229, 28, 0.12); }
+          .rail {
+            border-right: 1px solid rgba(255, 106, 22, 0.32);
+            padding: 8px 28px 0 0;
+          }
+          .rail h2 {
+            margin: 0 0 18px;
+            color: #ff7a16;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+          }
+          .rail-item {
+            display: grid;
+            grid-template-columns: 34px 1fr;
+            align-items: center;
+            min-height: 58px;
+            border-bottom: 1px solid #33271f;
+            color: inherit;
+            text-decoration: none;
+          }
+          .rail-item:hover, .rail-item:focus-visible {
+            background: rgba(255, 106, 22, 0.1);
+            outline: 0;
+          }
+          .rail-item:hover strong, .rail-item:focus-visible strong { color: #ff7a16; }
+          .rail-item .icon {
+            display: grid;
+            width: 22px;
+            height: 22px;
+            place-items: center;
+            color: #ff7a16;
+          }
+          .rail-item .icon svg {
+            width: 18px;
+            height: 18px;
+          }
+          .rail-item strong { color: #dedbd0; font-size: 13px; font-weight: 700; }
+          .footer {
+            position: absolute;
+            left: 68px;
+            right: 68px;
+            bottom: 37px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #242934;
+            padding-top: 18px;
+            color: #4f5964;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+          }
+          .footer span:last-child { color: #ff6a16; }
+        </style>
+      </head>
+      <body>
+        <div class="shell">
+          <header class="topbar">
+            <a class="brand" href="#yllw" aria-label="YLLW home"><strong>YLLW</strong><span>/ proxy</span></a>
+          </header>
+
+          <main class="main">
+            <aside class="rail">
+              <h2 id="school-library">School library</h2>
+              <a class="rail-item" href="#games" aria-label="Open Games"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="#ff7a16" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 8h11a4.5 4.5 0 0 1 4.2 6l-1.1 3.2a2.2 2.2 0 0 1-3.7.9l-1.7-1.6H8.8l-1.7 1.6a2.2 2.2 0 0 1-3.7-.9L2.3 14a4.5 4.5 0 0 1 4.2-6Z"/><path d="M7.5 11v4M5.5 13h4"/></g><circle cx="16.5" cy="12" r=".8" fill="#ff7a16"/><circle cx="18.5" cy="14" r=".8" fill="#ff7a16"/></svg></span><strong>Games</strong></a>
+              <a class="rail-item" href="#movies" aria-label="Open Movies"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="#ff7a16" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M7 5v14M17 5v14M3 9h4M3 15h4M17 9h4M17 15h4"/></g></svg></span><strong>Movies</strong></a>
+              <a class="rail-item" href="#music" aria-label="Open Music"><span class="icon" aria-hidden="true">&#x266C;</span><strong>Music</strong></a>
+              <a class="rail-item" href="#apps" aria-label="Open Apps"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="#ff7a16" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></g></svg></span><strong>Apps</strong></a>
+            </aside>
+
+            <section>
+              <h1 class="search-title" id="yllw">YLLW</h1>
+              <form class="search" action="#" role="search">
+                <label class="search-field" for="address">
+                  <span class="prompt" aria-hidden="true">&gt;</span>
+                  <input id="address" name="address" type="text" inputmode="url" autocomplete="url" placeholder="enter target address" aria-label="Target address"/>
+                </label>
+                <button class="go" type="submit" aria-label="Search">&#x2192;</button>
+              </form>
+            </section>
+          </main>
+
+          <footer class="footer"><span>YLLW:// interface build 00.1</span></footer>
+        </div>
+      </body>
+    </html>
+  </foreignObject>
+</svg>
