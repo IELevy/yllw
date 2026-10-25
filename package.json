@@ -1,0 +1,11 @@
+{
+  "name": "yllw",
+  "private": true,
+  "scripts": {
+    "start": "python3 -m http.server 4173",
+    "bare": "bare-server-node --host 0.0.0.0 --port 8080"
+  },
+  "dependencies": {
+    "@tomphttp/bare-server-node": "^2.0.6"
+  }
+}
