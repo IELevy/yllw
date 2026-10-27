@@ -210,6 +210,64 @@
             text-transform: uppercase;
           }
           .footer span:last-child { color: #ff6a16; }
+          .settings-dialog {
+            width: min(520px, calc(100vw - 40px));
+            padding: 28px;
+            border: 1px solid rgba(255, 229, 28, 0.55);
+            background: #11131a;
+            color: #f4f1db;
+            font: 13px "Courier New", Courier, monospace;
+          }
+          .settings-dialog::backdrop { background: rgba(0, 0, 0, 0.78); }
+          .settings-dialog h2 {
+            margin: 0 0 24px;
+            color: #ffe51c;
+            font-size: 18px;
+            text-transform: uppercase;
+          }
+          .settings-dialog label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ff7a16;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          }
+          .settings-dialog input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 229, 28, 0.45);
+            border-radius: 0;
+            background: #050506;
+            color: #f4f1db;
+            font: inherit;
+          }
+          .settings-dialog input:focus-visible { outline: 2px solid #168cff; }
+          .settings-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+          }
+          .settings-actions button {
+            padding: 10px 14px;
+            border: 1px solid #ff6a16;
+            border-radius: 0;
+            background: transparent;
+            color: #f4f1db;
+            font: inherit;
+            cursor: pointer;
+          }
+          .settings-actions button[type="submit"] {
+            border-color: #ffe51c;
+            background: #ffe51c;
+            color: #090909;
+            font-weight: 700;
+          }
+          .settings-actions button:hover, .settings-actions button:focus-visible {
+            outline: 2px solid #168cff;
+            outline-offset: 2px;
+          }
           .browser { min-width: 0; min-height: 0; }
           .status {
             height: 28px;
@@ -246,6 +304,7 @@
               <button class="rail-item" type="button" data-url="https://www.netflix.com" aria-label="Open Movies"><span class="icon" aria-hidden="true">&#x25B6;</span><strong>Movies</strong></button>
               <button class="rail-item" type="button" data-url="https://open.spotify.com" aria-label="Open Music"><span class="icon" aria-hidden="true">&#x266C;</span><strong>Music</strong></button>
               <button class="rail-item" type="button" data-url="https://www.wikipedia.org" aria-label="Open Apps"><span class="icon" aria-hidden="true">&#x25A6;</span><strong>Apps</strong></button>
+              <button class="rail-item" id="open-settings" type="button" aria-haspopup="dialog"><span class="icon" aria-hidden="true">&#x2699;</span><strong>Settings</strong></button>
             </aside>
 
             <section class="browser" id="browser">
@@ -261,6 +320,18 @@
               <iframe class="viewport" id="viewport" title="Proxied content" sandbox="allow-same-origin allow-scripts allow-forms allow-downloads allow-popups allow-pointer-lock allow-modals"></iframe>
             </section>
           </main>
+
+          <dialog class="settings-dialog" id="settings-dialog" aria-labelledby="settings-title">
+            <form id="settings-form">
+              <h2 id="settings-title">Proxy settings</h2>
+              <label for="proxy-server">Proxy server URL</label>
+              <input id="proxy-server" name="proxy-server" type="url" inputmode="url" autocomplete="url" placeholder="https://proxy.example/"/>
+              <div class="settings-actions">
+                <button id="cancel-settings" type="button">Cancel</button>
+                <button type="submit">Connect</button>
+              </div>
+            </form>
+          </dialog>
 
           <footer class="footer"><span>YLLW:// interface build 00.2</span></footer>
         </div>
@@ -278,6 +349,12 @@
           const address = document.querySelector('#address');
           const status = document.querySelector('#status');
           const viewport = document.querySelector('#viewport');
+          const settingsDialog = document.querySelector('#settings-dialog');
+          const settingsForm = document.querySelector('#settings-form');
+          const proxyServerInput = document.querySelector('#proxy-server');
+          let mux;
+          let selectedBareServer;
+          let detectedBareServer;
           const parentUrl = window.location.href;
 
           const setStatus = (message) => {
@@ -290,6 +367,19 @@
             const url = new URL(/^https?:\/\//i.test(candidate) ? candidate : `https://${candidate}`);
             if (!/^https?:$/.test(url.protocol)) throw new Error('Use an http or https URL');
             return url;
+          };
+
+          const normalizeBareServer = (value) => {
+            const candidate = value.trim();
+            if (!candidate) throw new Error('Enter a proxy server URL');
+            const url = new URL(/^https?:\/\//i.test(candidate) ? candidate : `https://${candidate}`);
+            if (!/^https?:$/.test(url.protocol)) throw new Error('Use an http or https proxy server URL');
+            if (url.username || url.password) throw new Error('Proxy server URLs cannot include credentials');
+            url.pathname = url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`;
+            url.search = '';
+            url.hash = '';
+            new URL('./v3/', url);
+            return url.href;
           };
 
           const withTimeout = (promise, milliseconds, label) => Promise.race([
@@ -331,12 +421,14 @@
             bareUrl.pathname = '/';
             bareUrl.search = '';
             bareUrl.hash = '';
-            const bareServer = bareUrl.href;
+            detectedBareServer = bareUrl.href;
+            mux = new BareMuxConnection(asset('bare-mux-worker.js'));
+            const savedBareServer = localStorage.getItem('yllw.bareServer');
+            const bareServer = normalizeBareServer(savedBareServer || detectedBareServer);
+            proxyServerInput.value = bareServer;
             setStatus(`connecting to bare server ${bareServer}${debugMode ? ' (debug)' : ''}`);
-            if (!/^https?:\/\//i.test(bareServer)) throw new Error('Invalid bare server URL');
-            new URL('./v3/', bareServer);
-            const mux = new BareMuxConnection(asset('bare-mux-worker.js'));
             await mux.setTransport(asset('bare-client.mjs'), [bareServer]);
+            selectedBareServer = bareServer;
 
             setStatus('loading scramjet controller');
             const { ScramjetController } = $scramjetLoadController();
@@ -387,6 +479,36 @@
 
           document.querySelectorAll('[data-url]').forEach((item) => {
             item.addEventListener('click', () => navigate(item.dataset.url));
+          });
+
+          document.querySelector('#open-settings').addEventListener('click', () => {
+            proxyServerInput.value = selectedBareServer || detectedBareServer || '';
+            settingsDialog.showModal();
+            proxyServerInput.focus();
+          });
+          document.querySelector('#cancel-settings').addEventListener('click', () => settingsDialog.close());
+          settingsForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            try {
+              const bareServer = normalizeBareServer(proxyServerInput.value);
+              if (!mux) throw new Error('Proxy runtime is not ready yet');
+              setStatus(`connecting to bare server ${bareServer}`);
+              await mux.setTransport(asset('bare-client.mjs'), [bareServer]);
+              selectedBareServer = bareServer;
+              try {
+                localStorage.setItem('yllw.bareServer', bareServer);
+              } catch (error) {
+                console.error(error);
+                setStatus(`connected to ${bareServer}, but the server preference could not be saved`);
+                settingsDialog.close();
+                return;
+              }
+              setStatus(`connected to ${bareServer}`);
+              settingsDialog.close();
+            } catch (error) {
+              console.error(error);
+              setStatus(`proxy connection failed: ${error.message}`);
+            }
           });
 
           window.addEventListener('popstate', () => {

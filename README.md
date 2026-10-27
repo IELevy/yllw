@@ -24,6 +24,8 @@ npm start
 
 Open `http://localhost:4173/yllw.svg` and enter a URL. The default Bare endpoint is `http://localhost:8080/`.
 
+Use **Settings** in the School library menu to connect to a different Bare server. The selected server is saved in browser storage and used on later visits.
+
 For development in GitHub Codespaces, start Bare on port `8080`, then open the proxy with `?debug=1` (for example, `https://<codespace>-4173.app.github.dev/yllw.svg?debug=1`). Debug mode connects to the forwarded Bare endpoint at `https://<codespace>-8080.app.github.dev/`.
 
 ## Remote deployment
