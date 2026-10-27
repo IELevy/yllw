@@ -24,6 +24,8 @@ npm start
 
 Open `http://localhost:4173/yllw.svg` and enter a URL. The default Bare endpoint is `http://localhost:8080/`.
 
+For development in GitHub Codespaces, start Bare on port `8080`, then open the proxy with `?debug=1` (for example, `https://<codespace>-4173.app.github.dev/yllw.svg?debug=1`). Debug mode connects to the forwarded Bare endpoint at `https://<codespace>-8080.app.github.dev/`.
+
 ## Remote deployment
 
 Deploy [yllw.svg](yllw.svg), `sw.js`, and `scramjet/` together over HTTPS. Run a Bare server on a public HTTPS origin and change `bareServer` in [yllw.svg](yllw.svg) to that origin. The SVG and Bare server may use different origins only when the Bare server sends permissive CORS headers.

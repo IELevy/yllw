@@ -309,7 +309,16 @@
             setStatus('starting bare transport');
             const pageUrl = new URL(window.location.href);
             const bareUrl = new URL(pageUrl);
-            if (pageUrl.hostname === 'localhost' || pageUrl.hostname === '127.0.0.1') {
+            const debugMode = new URLSearchParams(pageUrl.search).get('debug') === '1';
+            if (debugMode && pageUrl.hostname.endsWith('.app.github.dev')) {
+              const codespacesHostname = pageUrl.hostname.replace(/-\d+\.app\.github\.dev$/, '-8080.app.github.dev');
+              if (codespacesHostname === pageUrl.hostname) {
+                throw new Error('Cannot determine the Codespaces port from this hostname');
+              }
+              bareUrl.protocol = 'https:';
+              bareUrl.hostname = codespacesHostname;
+              bareUrl.port = '';
+            } else if (pageUrl.hostname === 'localhost' || pageUrl.hostname === '127.0.0.1') {
               bareUrl.protocol = 'http:';
               bareUrl.port = '8080';
             } else if (pageUrl.hostname.endsWith('.app.github.dev')) {
@@ -323,7 +332,7 @@
             bareUrl.search = '';
             bareUrl.hash = '';
             const bareServer = bareUrl.href;
-            setStatus(`connecting to bare server ${bareServer}`);
+            setStatus(`connecting to bare server ${bareServer}${debugMode ? ' (debug)' : ''}`);
             if (!/^https?:\/\//i.test(bareServer)) throw new Error('Invalid bare server URL');
             new URL('./v3/', bareServer);
             const mux = new BareMuxConnection(asset('bare-mux-worker.js'));
